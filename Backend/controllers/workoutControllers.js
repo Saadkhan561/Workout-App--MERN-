@@ -8,7 +8,7 @@ const getAllWorkouts = async (req, res) => {
   res.status(200).json(workouts);
 };
 
-// GET A SIMGLE WORKOUT
+// GET A SINGLE WORKOUT
 const getWorkout = async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
