@@ -1,25 +1,25 @@
-const Workout = require("../mmodels/workoutModel");
+const Workout = require("../models/workoutModel");
 const mongoose = require("mongoose");
 
 // GET ALL WORKOUTS
 const getAllWorkouts = async (req, res) => {
-  const workouts = await Workout.find({ reps: 20 });
+  const workouts = await Workout.find({}).sort({createAt: -1});
 
   res.status(200).json(workouts);
 };
 
 // GET A SIMGLE WORKOUT
 const getWorkout = async (req, res) => {
+  const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "Invalid Id" });
   }
 
-  const { id } = req.params;
   const workout = await Workout.findById(id);
   if (!workout) {
     return res.status(404).json({ error: "Workout not found" });
   }
-  res.satus(200).json(workout);
+  res.status(200).json(workout);
 };
 
 // CREATE NEW WORKOUT
@@ -42,7 +42,14 @@ const updateWorkout = async(req,res) => {
         return res.status(404).json({ error: "Invalid Id" });
       }
 
-    const workout
+    const workout = await Workout.findOneAndUpdate({_id: id}, {
+      ...req.body
+    })
+    if (!workout) {
+      return res.status(404).json({ error: "Workout not found" });
+    }
+    res.status(200).json(workout);
+    
 }
 
 // DELETE A WORKOUT
@@ -61,9 +68,10 @@ const deleteWorkout = async (req, res) => {
       res.status(200).json(workout)
 }
 
-module.expotrs = {
+module.exports = {
   createWorkout,
   getAllWorkouts,
   getWorkout,
-  deleteWorkout
+  deleteWorkout,
+  updateWorkout
 };
