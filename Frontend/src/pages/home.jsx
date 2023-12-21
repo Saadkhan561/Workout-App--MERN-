@@ -5,7 +5,8 @@ const Home = () => {
 
   useEffect(() => {
     const fetchWorkouts = async () => {
-      const response = await fetch("/api/workouts");
+      const response = await fetch("/api/workouts?" + new Date().getTime());
+      console.log(response);
       const json = await response.json();
       if (response.ok) {
         setWorkouts(json);
@@ -18,7 +19,7 @@ const Home = () => {
       <div className="workouts">
         {workouts &&
           workouts.map((workout) => {
-            <p key={workout._id}>{workout.title}</p>;
+            return <p key={workout._id}>{workout.title}</p>;
           })}
       </div>
     </div>
