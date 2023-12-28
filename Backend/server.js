@@ -3,9 +3,12 @@ require("dotenv").config();
 const express = require("express");
 const workoutRoutes = require("./routes/workouts");
 const mongoose = require("mongoose");
+const cors = require('cors')
 
 // CREATING EXPRESS APP
 const app = express();
+
+app.use(cors())
 
 // MIDDLEWARE
 // app.use(express.json());

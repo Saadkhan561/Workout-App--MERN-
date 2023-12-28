@@ -3,17 +3,9 @@ const mongoose = require("mongoose");
 
 // GET ALL WORKOUTS
 const getAllWorkouts = async (req, res) => {
-  // const workouts = await Workout.find({}).sort({createAt: -1});
+  const workouts = await Workout.find({}).sort({createAt: -1});
 
-  // res.status(200).json(workouts);
-  try {
-    const workouts = await Workout.find({}).sort({ createdAt: -1 });
-    console.log(workouts); // Log the response
-    res.status(200).json(workouts);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
+  res.status(200).json(workouts);
 }; 
 
 // GET A SINGLE WORKOUT
@@ -32,13 +24,14 @@ const getWorkout = async (req, res) => {
 
 // CREATE NEW WORKOUT
 const createWorkout = async (req, res) => {
-  const { title, load, reps } = req.body;
+  console.log(req.body)
   try {
+    const { title, load, reps } = req.body;
     const workout = await Workout.create({ title, load, reps });
-    res.json(workout);
+    res.status(200).json(workout);
   } catch {
     (error) => {
-      res.json({ error: error.message });
+      res.status(400).json({ error: error.message });
     };
   }
 };
