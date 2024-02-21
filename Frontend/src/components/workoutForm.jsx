@@ -1,41 +1,45 @@
 import React, { useState } from "react";
+import { useWorkoutsContext } from "../hooks/useWorkoutsContext";
 
 const WorkoutForm = () => {
-  const [ title, setTitle ] = useState("");
-  const [ load, setLoad ] = useState("");
-  const [ reps, setReps ] = useState("");
-  const [ error, setError ] = useState(null);
+  const {dispatch} = useWorkoutsContext()
+  const [title, setTitle] = useState("");
+  const [load, setLoad] = useState("");
+  const [reps, setReps] = useState("");
+  const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const workout = {title, load, reps}
+    const workout = { title, load, reps };
 
     try {
-        const response = await fetch('http://localhost:3000/api/workouts', {
-            method: 'POST',
-            body: JSON.stringify(workout),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        const json = await response.json()
-        console.log(json)
-    
-        if(!response.ok) {
-            setError(json.error)
-        } 
-        if(response.ok) {
-            setTitle("")
-            setLoad("")
-            setReps("")
-            setError(null)
-            console.log('New workout added', json)
-        }
-    } catch(error) {
-        console.log(error)
+      const response = await fetch("http://localhost:4000/api/workouts", {
+        method: "POST",
+        body: JSON.stringify(workout),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        setError(json.error);
+      }
+      const json = await response.json();
+      console.log(json);
+
+      if (response.ok) {
+        setTitle("");
+        setLoad("");
+        setReps("");
+        setError(null);
+        console.log("New workout added", json);
+        dispatch({type: 'CREATE_WORKOUT', payload: json})
+      }
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
   return (
     <form className="create" onSubmit={handleSubmit}>
       <h3>Add a New Workout</h3>
@@ -55,7 +59,7 @@ const WorkoutForm = () => {
       />
       <label htmlFor="reps">Reps :</label>
       <input
-      id="reps"
+        id="reps"
         type="number"
         onChange={(e) => setReps(e.target.value)}
         value={reps}
